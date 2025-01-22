@@ -1,20 +1,41 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { Provider as PaperProvider } from "react-native-paper";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import SplashScreen from "./screens/SplashScreen";
+import LoginScreen from "./screens/LoginScreen";
+import SignupScreen from "./screens/SignupScreen";
+import DashboardScreen from "./screens/DashboardScreen";
+import { DefaultTheme } from "react-native-paper";
 
+const Stack = createStackNavigator();
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    return (
+        <PaperProvider theme={DefaultTheme}>
+            <NavigationContainer>
+                <Stack.Navigator initialRouteName="Splash">
+                    <Stack.Screen
+                        name="Splash"
+                        component={SplashScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="Login"
+                        component={LoginScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="Signup"
+                        component={SignupScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="Dashboard"
+                        component={DashboardScreen}
+                    />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </PaperProvider>
+    );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

@@ -26,6 +26,8 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "assetBundlePatterns": ["**/*"],
+    "extra": {}
   }
 }

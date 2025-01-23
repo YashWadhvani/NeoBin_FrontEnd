@@ -52,7 +52,7 @@ const SplashScreen = ({ navigation }) => {
                     },
                 ]}
             >
-                - Smart, Sleek, Sustainable
+                - Smart{"\n   "}Sleek{"\n   "}Sustainable
             </Animated.Text>
 
             <Animated.Text
@@ -63,7 +63,7 @@ const SplashScreen = ({ navigation }) => {
                     },
                 ]}
             >
-                Welcome to Smart Waste Management App
+                Welcome to Smart {"\n"} Waste Management App
             </Animated.Text>
 
             <Animated.View
@@ -75,7 +75,7 @@ const SplashScreen = ({ navigation }) => {
                 ]}
             >
                 <TouchableOpacity onPress={() => navigation.replace("Login")}>
-                    <Text>Explore</Text>
+                    <Text style={{fontFamily:"MonumentExtended-Regular"}}>Explore</Text>
                 </TouchableOpacity>
             </Animated.View>
         </Animated.View>
@@ -94,21 +94,23 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#404040",
         textAlign: "center",
+        fontFamily: "MonumentExtended-Regular"
     },
     taglineText: {
-        fontSize: 14,
+        fontSize: 12,
         color: "#404040",
-        textAlign: "right",
-        alignSelf: "flex-end", // Align tagline to the right
-        marginRight: "10%", // Move slightly towards the right from center
-        // marginTop: 10, // Space below headText
-        transform: [{translateY: -100}]
+        textAlign: "left",
+        alignSelf: "flex-end",
+        marginRight: "16%", 
+        transform: [{translateY: -95}],
+        fontFamily: "MonumentExtended-Regular"
     },
     centerText: {
-        fontSize: 24,
+        fontSize: 18,
         textAlign: "center",
         color: "#404040",
-        marginTop: 25, // Space below taglineText
+        marginTop: 25,
+        fontFamily:"MonumentExtended-Regular"
     },
     exploreButton: {
         color: "#404040",
@@ -118,7 +120,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
         borderWidth: 2,
         alignSelf: "center",
-        marginTop: 50, // Space below centerText
+        marginTop: 50,
     },
 });
 

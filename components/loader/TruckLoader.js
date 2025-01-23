@@ -1,40 +1,80 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, Text, Image, Animated, StyleSheet, Dimensions } from "react-native";
-import { useNavigation } from "@react-navigation/native"; // Import useNavigation
+import { useNavigation } from "@react-navigation/native";
 
 export default function TruckLoader({ nextScreen }) {
     const [percentage, setPercentage] = useState(0); // Initial percentage
     const screenWidth = Dimensions.get("window").width; // Get screen width
     const truckAnimation = useRef(new Animated.Value(0)).current; // Animation value for the truck
+    const dustbinLift = useRef(new Animated.Value(0)).current; // Vertical lift for the dustbin
+    const dustbinRotate = useRef(new Animated.Value(0)).current; // Rotation value for the dustbin
     const navigation = useNavigation(); // Access the navigation object
+    const intervalRef = useRef(null); // Store interval reference
 
-    // Update animation whenever the percentage changes
-    useEffect(() => {
-        Animated.timing(truckAnimation, {
-            toValue: (screenWidth - 100) * (percentage / 100), // 100px truck width adjustment
-            duration: 500, // Duration of the animation
-            useNativeDriver: false, // `false` because we're animating layout properties
-        }).start();
-    }, [percentage]);
-
-    // Simulate loading process
-    useEffect(() => {
-        const interval = setInterval(() => {
+    // Function to start the percentage increment
+    const startIncrement = () => {
+        intervalRef.current = setInterval(() => {
             setPercentage((prev) => {
                 if (prev < 100) {
                     return prev + 20; // Increment percentage
                 } else {
-                    clearInterval(interval); // Stop interval when 100% is reached
-                    // Navigate to nextScreen when loading is complete
-                    setTimeout(() => {
-                        navigation.replace(nextScreen); // Navigate to next screen dynamically
-                    }, 500); // Wait for a brief moment to let the animation complete
+                    clearInterval(intervalRef.current); // Stop incrementing at 100%
+                    setTimeout(() => navigation.replace(nextScreen), 500); // Navigate to the next screen
                     return prev;
                 }
             });
-        }, 1000); // Update every second
-        return () => clearInterval(interval); // Cleanup interval on component unmount
-    }, [nextScreen]);
+        }, 500); // Update every 500ms
+    };
+
+    useEffect(() => {
+        startIncrement(); // Start increment initially
+        return () => clearInterval(intervalRef.current); // Cleanup on unmount
+    }, [nextScreen, navigation]);
+
+    // Animate truck movement whenever the percentage changes
+    useEffect(() => {
+        Animated.timing(truckAnimation, {
+            toValue: (screenWidth - 100) * (percentage / 100), // 100px truck width adjustment
+            duration: 500, // Animation duration
+            useNativeDriver: false, // `false` because we're animating layout properties
+        }).start();
+    }, [percentage]);
+
+    // Handle dustbin animation
+    const handleDustbinAnimation = () => {
+        clearInterval(intervalRef.current); // Pause percentage increment during dustbin animation
+        Animated.sequence([
+            Animated.timing(dustbinLift, {
+                toValue: -100, // Lift dustbin by 10px
+                duration: 1500,
+                useNativeDriver: true,
+            }),
+            Animated.timing(dustbinRotate, {
+                toValue: 1, // Rotate dustbin 90°
+                duration: 500,
+                useNativeDriver: true,
+            }),
+            Animated.timing(dustbinRotate, {
+                toValue: 0, // Rotate dustbin back to original position
+                duration: 500,
+                useNativeDriver: true,
+            }),
+            Animated.timing(dustbinLift, {
+                toValue: 0, // Lower the dustbin back
+                duration: 500,
+                useNativeDriver: true,
+            }),
+        ]).start(() => {
+            startIncrement(); // Resume percentage increment after dustbin animation
+        });
+    };
+
+    // Trigger dustbin animation when percentage reaches 60%
+    useEffect(() => {
+        if (percentage === 60) {
+            handleDustbinAnimation();
+        }
+    }, [percentage]);
 
     return (
         <View style={styles.container}>
@@ -45,6 +85,26 @@ export default function TruckLoader({ nextScreen }) {
             <Animated.Image
                 source={require("../../assets/images/truckNew1.png")} // Replace with your truck image path
                 style={[styles.truckImage, { transform: [{ translateX: truckAnimation }] }]}
+                resizeMode="contain"
+            />
+
+            {/* Animated Dustbin */}
+            <Animated.Image
+                source={require("../../assets/images/dustbin.png")} // Replace with your dustbin image path
+                style={[
+                    styles.dustbinImage,
+                    {
+                        transform: [
+                            { translateY: dustbinLift },
+                            {
+                                rotate: dustbinRotate.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: ["0deg", "90deg"], // Rotate from 0 to 90 degrees
+                                }),
+                            },
+                        ],
+                    },
+                ]}
                 resizeMode="contain"
             />
         </View>
@@ -63,7 +123,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#404040", // Text color
         marginBottom: 20,
-        fontFamily: "MonumentExtended-Regular"
+        fontFamily: "MonumentExtended-Regular",
     },
     truckImage: {
         position: "absolute",
@@ -72,12 +132,11 @@ const styles = StyleSheet.create({
         height: 60, // Truck height
         left: 0, // Start from the left
     },
-    headlightImage: {
+    dustbinImage: {
         position: "absolute",
-        bottom: 50, // Position truck near the bottom
-        width: 100, // Truck width
-        height: 60, // Truck height
-        left: "236px", // Start from the left
+        bottom: -30, // Position dustbin above the truck
+        width: 25, // Dustbin width
+        height: 25, // Dustbin height
+        left: "40%", // Center dustbin
     },
-    
 });

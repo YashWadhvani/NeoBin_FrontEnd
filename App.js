@@ -8,8 +8,9 @@ import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
 import DashboardScreen from "./screens/DashboardScreen";
 import customTheme from "./theme/customTheme";
+import { AuthProvider } from "./contexts/AuthContext";
 import * as Font from "expo-font";
-import TruckLoader from "./components/loader/TruckLoader";  // Import TruckLoader here
+import TruckLoader from "./components/loader/TruckLoader"; // Import TruckLoader here
 
 const Stack = createStackNavigator();
 
@@ -55,29 +56,31 @@ export default function App() {
 
     return (
         <PaperProvider theme={customTheme}>
-            <NavigationContainer>
-                <Stack.Navigator initialRouteName="Splash">
-                    <Stack.Screen
-                        name="Splash"
-                        component={SplashScreen}
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="Login"
-                        component={LoginScreen}
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="Signup"
-                        component={SignupScreen}
-                        options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                        name="Dashboard"
-                        component={DashboardScreen}
-                    />
-                </Stack.Navigator>
-            </NavigationContainer>
+            <AuthProvider>
+                <NavigationContainer>
+                    <Stack.Navigator initialRouteName="Signup">
+                        <Stack.Screen
+                            name="Splash"
+                            component={SplashScreen}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="Login"
+                            component={LoginScreen}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="Signup"
+                            component={SignupScreen}
+                            options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                            name="Dashboard"
+                            component={DashboardScreen}
+                        />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </AuthProvider>
         </PaperProvider>
     );
 }

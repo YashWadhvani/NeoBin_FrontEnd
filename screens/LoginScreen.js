@@ -2,24 +2,27 @@ import React, { useState, useContext } from "react";
 import { StyleSheet, View, Animated, TouchableOpacity } from "react-native";
 import { Text, TextInput, Button } from "react-native-paper";
 import { AuthContext } from "../contexts/AuthContext";
-// import TruckLoader from "../components/loader/TruckLoader";
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { user, loading, login: loginUser } = useContext(AuthContext);
-    const [error, setError] = useState(null);
+    const { login: loginUser } = useContext(AuthContext);
 
     const handleLogin = async () => {
         try {
-            setError(null);
+            // setError(null);
             await loginUser(email, password);
-            navigation.replace("Dashboard");
+            navigation.replace("BinGrid");
         } catch (error) {
-            setError(
-                "Login failed. Please check your credentials and try again."
-            );
-            console.error("Error details:", error);
+            if (error.response && error.response.status == 400) {
+                Alert.alert("Registration Failed!", error.response.data);
+            } else {
+                Alert.alert(
+                    "Error!",
+                    "Something went Wrong. Please Try Again."
+                );
+            }
+            console.error(error);
         }
     };
 
@@ -70,11 +73,6 @@ export default function LoginScreen({ navigation }) {
                     <Text style={styles.signInButtonText}>Sign up</Text>
                 </TouchableOpacity>
             </View>
-            {error && (
-                <Text style={{ color: "red", textAlign: "center" }}>
-                    {error}
-                </Text>
-            )}
         </Animated.View>
     );
 }
@@ -83,7 +81,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: "#FFF8EA",
         flex: 1,
-        justifyContent:"center",
+        justifyContent: "center",
     },
     headText: {
         fontSize: 36,
@@ -128,7 +126,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
         borderWidth: 2,
         alignSelf: "center",
-        marginTop: 20, 
+        marginTop: 20,
         marginBottom: 20,
         width: "80%",
     },
@@ -138,16 +136,16 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     left_hr: {
-        width: "80%", 
-        height: 1, 
-        backgroundColor: "#404040", 
-        marginVertical: 30, 
+        width: "80%",
+        height: 1,
+        backgroundColor: "#404040",
+        marginVertical: 30,
     },
     right_hr: {
-        width: "80%", 
-        height: 1, 
-        backgroundColor: "#404040", 
-        marginVertical: 30, 
+        width: "80%",
+        height: 1,
+        backgroundColor: "#404040",
+        marginVertical: 30,
         marginLeft: "auto",
     },
     text: {

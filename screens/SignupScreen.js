@@ -1,32 +1,33 @@
-import { StyleSheet, View, Animated, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Animated, TouchableOpacity, Alert } from "react-native";
 import React, { useState, useContext } from "react";
 import { Text, TextInput, Button } from "react-native-paper";
-import { AuthContext } from "../contexts/AuthContext";
 import axios from "axios";
 import { API_URL } from "@env";
 
-export default function SignupScreen({navigation}) {
+export default function SignupScreen({ navigation }) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [phone, setPhone] = useState("");
-    // const { user, loading, login: loginUser } = useContext(AuthContext);
-    const [error, setError] = useState(null);
 
     const handleSignup = async () => {
         try {
-          await axios.post(`${API_URL}/signup`, {
-            name,
-            email,
-            phone,
-            password,
-          });
-          navigation.navigate("Login");
+            await axios.post(`${API_URL}/signup`, {
+                name,
+                email,
+                phone,
+                password,
+            });
+            navigation.navigate("Login");
         } catch (error) {
-          setError("Signup failed. Please try again.");
-          console.error(error);
+            if (error.response && error.response.status == 400) {
+                Alert.alert("Registration Failed!", error.response.data)
+            } else {
+                Alert.alert("Error!","Something went Wrong. Please Try Again.")
+            }
+            console.error(error);
         }
-      };
+    };
 
     return (
         <Animated.View style={styles.container}>
@@ -67,7 +68,10 @@ export default function SignupScreen({navigation}) {
                 value={password}
                 onChangeText={(text) => setPassword(text)}
             />
-            <TouchableOpacity style={styles.signInButton} onPress={handleSignup}>
+            <TouchableOpacity
+                style={styles.signInButton}
+                onPress={handleSignup}
+            >
                 <Text style={styles.signInButtonText}>Sign Up</Text>
             </TouchableOpacity>
             <Button
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: "#FFF8EA",
         flex: 1,
-        justifyContent:"center",
+        justifyContent: "center",
     },
     headText: {
         fontSize: 36,
@@ -129,7 +133,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
         borderWidth: 2,
         alignSelf: "center",
-        marginTop: 30, 
+        marginTop: 30,
         marginBottom: 20,
         width: "80%",
     },
@@ -139,16 +143,16 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     left_hr: {
-        width: "80%", 
-        height: 1, 
-        backgroundColor: "#404040", 
-        marginVertical: 30, 
+        width: "80%",
+        height: 1,
+        backgroundColor: "#404040",
+        marginVertical: 30,
     },
     right_hr: {
-        width: "80%", 
-        height: 1, 
-        backgroundColor: "#404040", 
-        marginVertical: 30, 
+        width: "80%",
+        height: 1,
+        backgroundColor: "#404040",
+        marginVertical: 30,
         marginLeft: "auto",
     },
     text: {

@@ -10,7 +10,6 @@ export default function LoginScreen({ navigation }) {
 
     const handleLogin = async () => {
         try {
-            // setError(null);
             await loginUser(email, password);
             navigation.replace("BinGrid");
         } catch (error) {

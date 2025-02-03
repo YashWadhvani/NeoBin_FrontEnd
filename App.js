@@ -1,5 +1,4 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -10,7 +9,7 @@ import DashboardScreen from "./screens/DashboardScreen";
 import customTheme from "./theme/customTheme";
 import { AuthProvider } from "./contexts/AuthContext";
 import * as Font from "expo-font";
-import TruckLoader from "./components/loader/TruckLoader"; // Import TruckLoader here
+import TruckLoader from "./components/loader/TruckLoader";
 import BinGridScreen from "./screens/BinGridScreen";
 
 const Stack = createStackNavigator();
@@ -26,16 +25,14 @@ export default function App() {
     const [fontsLoaded, setFontsLoaded] = React.useState(false);
     const [loadingFinished, setLoadingFinished] = React.useState(false);
 
-    // Load fonts and set loadingFinished to true after a delay
     React.useEffect(() => {
         loadFonts().then(() => setFontsLoaded(true));
 
-        // Show loader for 2-3 seconds regardless of fonts loading
         const timeout = setTimeout(() => {
             setLoadingFinished(true);
-        }, 6000); // Delay for 3 seconds
+        }, 6000);
 
-        return () => clearTimeout(timeout); // Clear timeout on cleanup
+        return () => clearTimeout(timeout);
     }, []);
 
     if (!loadingFinished) {
@@ -46,9 +43,7 @@ export default function App() {
                         name="Loader"
                         options={{ headerShown: false }}
                     >
-                        {() => (
-                            <TruckLoader nextScreen="Splash" /> // Navigate to Dashboard after loading
-                        )}
+                        {() => <TruckLoader nextScreen="Splash" />}
                     </Stack.Screen>
                 </Stack.Navigator>
             </NavigationContainer>
@@ -89,12 +84,3 @@ export default function App() {
         </PaperProvider>
     );
 }
-
-const styles = StyleSheet.create({
-    loaderContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#FFF8EA",
-    },
-});

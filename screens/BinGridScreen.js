@@ -32,7 +32,6 @@ export default function BinGridScreen({ navigation }) {
 
     const renderBin = ({ item }) => {
         return (
-            // ✅ Added return statement
             <TouchableOpacity
                 style={styles.binContainer}
                 onPress={() => navigation.navigate("Dashboard", { bin: item })}
@@ -89,7 +88,7 @@ const styles = StyleSheet.create({
         padding: 20,
         margin: 10,
         elevation: 5,
-        width: "40%", // Grid layout
+        width: "40%",
     },
     binText: {
         fontSize: 16,

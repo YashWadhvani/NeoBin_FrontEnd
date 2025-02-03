@@ -1,5 +1,5 @@
-import { StyleSheet, View, Animated, TouchableOpacity, Alert } from "react-native";
-import React, { useState, useContext } from "react";
+import { StyleSheet, Animated, TouchableOpacity, Alert } from "react-native";
+import React, { useState } from "react";
 import { Text, TextInput, Button } from "react-native-paper";
 import axios from "axios";
 import { API_URL } from "@env";
@@ -21,9 +21,12 @@ export default function SignupScreen({ navigation }) {
             navigation.navigate("Login");
         } catch (error) {
             if (error.response && error.response.status == 400) {
-                Alert.alert("Registration Failed!", error.response.data)
+                Alert.alert("Registration Failed!", error.response.data);
             } else {
-                Alert.alert("Error!","Something went Wrong. Please Try Again.")
+                Alert.alert(
+                    "Error!",
+                    "Something went Wrong. Please Try Again."
+                );
             }
             console.error(error);
         }
@@ -119,7 +122,6 @@ const styles = StyleSheet.create({
         fontSize: 12,
     },
     button: {
-        // marginTop: 15,
         width: "100%",
     },
     buttonText: {

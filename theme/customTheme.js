@@ -4,17 +4,17 @@ const customTheme = {
     ...DefaultTheme,
     roundness: 5,
     colors: {
-        primary: "#404040", // Secondary text color for primary actions
-        accent: "#404040", // Accent color
-        background: "#FFF8EA", // App background color
-        surface: "#FFFFFF", // Component background surfaces (e.g., cards)
-        text: "#404040", // Main text color
-        placeholder: "#3F604E", // Placeholder text color
-        disabled: "rgba(63, 96, 78, 0.5)", // Disabled elements (secondary text with opacity)
-        error: "#B00020", // Error color
-        onSurface: "#404040", // Text color on surface components
-        border: "#FFFFFF", // Component borders
-        outline: "#404040"
+        primary: "#404040",
+        accent: "#404040",
+        background: "#FFF8EA",
+        surface: "#FFFFFF",
+        text: "#404040",
+        placeholder: "#3F604E",
+        disabled: "rgba(63, 96, 78, 0.5)",
+        error: "#B00020",
+        onSurface: "#404040",
+        border: "#FFFFFF",
+        outline: "#404040",
     },
     fonts: {
         regular: {

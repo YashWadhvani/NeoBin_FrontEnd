@@ -1,14 +1,8 @@
-import {
-    StyleSheet,
-    Text,
-    View,
-    ScrollView,
-    Animated,
-} from "react-native";
+import { StyleSheet, Text, View, ScrollView, Animated } from "react-native";
 import React from "react";
 
-export default function DashboardScreen( {route} ) {
-    const { bin } = route.params; // ✅ Receiving the bin data
+export default function DashboardScreen({ route }) {
+    const { bin } = route.params;
 
     return (
         <Animated.View style={styles.container}>
@@ -33,7 +27,9 @@ export default function DashboardScreen( {route} ) {
 
                 <View style={styles.detailBox}>
                     <Text style={styles.label}>Gas Concentration:</Text>
-                    <Text style={styles.value}>{bin.gas_concentration || "N/A"}</Text>
+                    <Text style={styles.value}>
+                        {bin.gas_concentration || "N/A"}
+                    </Text>
                 </View>
 
                 <View style={styles.detailBox}>
@@ -53,7 +49,6 @@ export default function DashboardScreen( {route} ) {
         </Animated.View>
     );
 }
-
 
 const styles = StyleSheet.create({
     container: {

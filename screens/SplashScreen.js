@@ -2,27 +2,24 @@ import React, { useEffect, useRef } from "react";
 import { StyleSheet, Animated, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native-paper";
 
-const SplashScreen = ({ navigation }) => {
-    const fadeAnim1 = useRef(new Animated.Value(0)).current; // Initial opacity for headText
-    const fadeAnim2 = useRef(new Animated.Value(0)).current; // Initial opacity for taglineText, centerText, and button
-    const translateYAnim = useRef(new Animated.Value(0)).current; // Initial vertical translation for headText
+export default function SplashScreen({ navigation }) {
+    const fadeAnim1 = useRef(new Animated.Value(0)).current;
+    const fadeAnim2 = useRef(new Animated.Value(0)).current;
+    const translateYAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
-        // Start animation for headText
         Animated.timing(fadeAnim1, {
-            toValue: 1, // Final opacity
-            duration: 2000, // Duration of animation in ms
-            useNativeDriver: true, // Opacity supports native driver
+            toValue: 1,
+            duration: 2000,
+            useNativeDriver: true,
         }).start(() => {
-            // After headText fades in, start moving it up
             Animated.timing(translateYAnim, {
-                toValue: -100, // Move up by 100 pixels (adjust as needed)
-                duration: 1500, // Duration of translation
+                toValue: -100,
+                duration: 1500,
                 useNativeDriver: true,
             }).start(() => {
-                // After moving headText, fade in the remaining content
                 Animated.timing(fadeAnim2, {
-                    toValue: 1, // Final opacity for taglineText, centerText, and button
+                    toValue: 1,
                     duration: 2000,
                     useNativeDriver: true,
                 }).start();
@@ -48,7 +45,7 @@ const SplashScreen = ({ navigation }) => {
                 style={[
                     styles.taglineText,
                     {
-                        opacity: fadeAnim2, // Fades in after headText animation
+                        opacity: fadeAnim2,
                     },
                 ]}
             >
@@ -59,7 +56,7 @@ const SplashScreen = ({ navigation }) => {
                 style={[
                     styles.centerText,
                     {
-                        opacity: fadeAnim2, // Fades in after headText animation
+                        opacity: fadeAnim2,
                     },
                 ]}
             >
@@ -70,17 +67,19 @@ const SplashScreen = ({ navigation }) => {
                 style={[
                     styles.exploreButton,
                     {
-                        opacity: fadeAnim2, // Fades in after headText animation
+                        opacity: fadeAnim2,
                     },
                 ]}
             >
                 <TouchableOpacity onPress={() => navigation.replace("Login")}>
-                    <Text style={{fontFamily:"MonumentExtended-Regular"}}>Explore</Text>
+                    <Text style={{ fontFamily: "MonumentExtended-Regular" }}>
+                        Explore
+                    </Text>
                 </TouchableOpacity>
             </Animated.View>
         </Animated.View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -94,23 +93,23 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#404040",
         textAlign: "center",
-        fontFamily: "MonumentExtended-Regular"
+        fontFamily: "MonumentExtended-Regular",
     },
     taglineText: {
         fontSize: 12,
         color: "#404040",
         textAlign: "left",
         alignSelf: "flex-end",
-        marginRight: "16%", 
-        transform: [{translateY: -95}],
-        fontFamily: "MonumentExtended-Regular"
+        marginRight: "16%",
+        transform: [{ translateY: -95 }],
+        fontFamily: "MonumentExtended-Regular",
     },
     centerText: {
         fontSize: 18,
         textAlign: "center",
         color: "#404040",
         marginTop: 25,
-        fontFamily:"MonumentExtended-Regular"
+        fontFamily: "MonumentExtended-Regular",
     },
     exploreButton: {
         color: "#404040",
@@ -123,5 +122,3 @@ const styles = StyleSheet.create({
         marginTop: 50,
     },
 });
-
-export default SplashScreen;

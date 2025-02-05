@@ -1,5 +1,7 @@
 import { StyleSheet, Text, View, ScrollView, Animated } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import { MAPS_API_KEY } from "@env";
+// import BinLocation from "../assets/images/pin.png";
 import React from "react";
 
 export default function DashboardScreen({ route }) {
@@ -104,30 +106,33 @@ export default function DashboardScreen({ route }) {
                 {/* Location Display */}
                 <View style={styles.locationBox}>
                     <Text style={styles.label}>Location:</Text>
-                    <Text style={styles.value}>
+                    {/* <Text style={styles.value}>
                         {bin.location
                             ? `${bin.location.latitude}, ${bin.location.longitude}`
                             : "N/A"}
-                    </Text>
+                    </Text> */}
 
-                    <MapView
-                        style={styles.map}
-                        provider={PROVIDER_GOOGLE}
-                        region={{
-                            latitude: bin.location.latitude,
-                            longitude: bin.location.longitude,
-                            latitudeDelta: 0.015,
-                            longitudeDelta: 0.0121,
-                        }}
-                    >
-                        <Marker
-                            coordinate={{
-                                latitude: bin.location.latitude,
-                                longitude: bin.location.longitude,
-                            }}
-                            title={`${bin.binId}`}
-                        />
-                    </MapView>
+                    {bin.location &&
+                        bin.location.latitude &&
+                        bin.location.longitude && (
+                            <MapView
+                                style={styles.map}
+                                provider={PROVIDER_GOOGLE}
+                                initialRegion={{
+                                    latitude: bin.location.latitude,
+                                    longitude: bin.location.longitude,
+                                    latitudeDelta: 0.05,
+                                    longitudeDelta: 0.05,
+                                }}
+                            >
+                                {/* <Marker
+                                    coordinate={{
+                                        latitude: bin.location.latitude,
+                                        longitude: bin.location.longitude,
+                                    }}
+                                /> */}
+                            </MapView>
+                        )}
                 </View>
             </ScrollView>
         </Animated.View>
@@ -222,8 +227,8 @@ const styles = StyleSheet.create({
         marginTop: 4,
     },
     map: {
-        width:"100%",
-        height:"100%",
-        flex:1
-    }
+        width: "100%",
+        height: 200,
+        flex: 1,
+    },
 });

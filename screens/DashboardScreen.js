@@ -1,7 +1,14 @@
-import { StyleSheet, Text, View, ScrollView, Animated, Platform } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    View,
+    ScrollView,
+    Animated,
+    Platform,
+} from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { MAPS_API_KEY } from "@env";
-// import BinLocation from "../assets/images/pin.png";
+import BinLocation from "../assets/images/pin.png";
 import React from "react";
 
 export default function DashboardScreen({ route }) {
@@ -12,6 +19,7 @@ export default function DashboardScreen({ route }) {
         if (!value) return 0;
         return Math.min((value / max) * 100, 100); // Ensure it doesn't exceed 100%
     };
+    console.log(bin.location)
 
     return (
         <Animated.View style={styles.container}>
@@ -106,33 +114,36 @@ export default function DashboardScreen({ route }) {
                 {/* Location Display */}
                 <View style={styles.locationBox}>
                     <Text style={styles.label}>Location:</Text>
-                    {/* <Text style={styles.value}>
+                    <Text style={styles.value}>
                         {bin.location
                             ? `${bin.location.latitude}, ${bin.location.longitude}`
                             : "N/A"}
-                    </Text> */}
+                    </Text>
 
                     {bin.location &&
-                        bin.location.latitude &&
-                        bin.location.longitude && (
-                            <MapView
-                                style={styles.map}
-                                provider={PROVIDER_GOOGLE}
-                                initialRegion={{
+                    bin.location.latitude &&
+                    bin.location.longitude ? (
+                        <MapView
+                            style={styles.map}
+                            provider={PROVIDER_GOOGLE}
+                            initialRegion={{
+                                latitude: bin.location.latitude,
+                                longitude: bin.location.longitude,
+                                latitudeDelta: 0.1,
+                                longitudeDelta: 0.1,
+                            }}
+                        >
+                            <Marker
+                                coordinate={{
                                     latitude: bin.location.latitude,
                                     longitude: bin.location.longitude,
-                                    latitudeDelta: 0.05,
-                                    longitudeDelta: 0.05,
                                 }}
-                            >
-                                {/* <Marker
-                                    coordinate={{
-                                        latitude: bin.location.latitude,
-                                        longitude: bin.location.longitude,
-                                    }}
-                                /> */}
-                            </MapView>
-                        )}
+                                pinColor="red"
+                            />
+                        </MapView>
+                    ) : (
+                        <Text>No location available</Text>
+                    )}
                 </View>
             </ScrollView>
         </Animated.View>

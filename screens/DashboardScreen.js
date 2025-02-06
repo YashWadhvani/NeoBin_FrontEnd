@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, ScrollView, Animated, Platform } from "react-native";
-// import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-// import { MAPS_API_KEY } from "@env";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import { MAPS_API_KEY } from "@env";
 // import BinLocation from "../assets/images/pin.png";
 import React from "react";
 
@@ -115,24 +115,23 @@ export default function DashboardScreen({ route }) {
                     {bin.location &&
                         bin.location.latitude &&
                         bin.location.longitude && (
-                            console.log(bin.location)
-                            // <MapView
-                            //     style={styles.map}
-                            //     provider={PROVIDER_GOOGLE}
-                            //     initialRegion={{
-                            //         latitude: bin.location.latitude,
-                            //         longitude: bin.location.longitude,
-                            //         latitudeDelta: 0.05,
-                            //         longitudeDelta: 0.05,
-                            //     }}
-                            // >
-                            //     {/* <Marker
-                            //         coordinate={{
-                            //             latitude: bin.location.latitude,
-                            //             longitude: bin.location.longitude,
-                            //         }}
-                            //     /> */}
-                            // </MapView>
+                            <MapView
+                                style={styles.map}
+                                provider={PROVIDER_GOOGLE}
+                                initialRegion={{
+                                    latitude: bin.location.latitude,
+                                    longitude: bin.location.longitude,
+                                    latitudeDelta: 0.05,
+                                    longitudeDelta: 0.05,
+                                }}
+                            >
+                                {/* <Marker
+                                    coordinate={{
+                                        latitude: bin.location.latitude,
+                                        longitude: bin.location.longitude,
+                                    }}
+                                /> */}
+                            </MapView>
                         )}
                 </View>
             </ScrollView>

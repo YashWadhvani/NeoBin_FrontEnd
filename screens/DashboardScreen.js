@@ -119,11 +119,8 @@ export default function DashboardScreen({ route }) {
                             ? `${bin.location.latitude}, ${bin.location.longitude}`
                             : "N/A"}
                     </Text>
-
-                    {bin.location &&
-                    bin.location.latitude &&
-                    bin.location.longitude ? (
-                        <MapView
+                   
+                        {/* <MapView
                             style={styles.map}
                             provider={PROVIDER_GOOGLE}
                             initialRegion={{
@@ -141,9 +138,8 @@ export default function DashboardScreen({ route }) {
                                 pinColor="red"
                             />
                         </MapView>
-                    ) : (
-                        <Text>No location available</Text>
-                    )}
+                        <Text>No location available</Text> */}
+                    
                 </View>
             </ScrollView>
         </Animated.View>

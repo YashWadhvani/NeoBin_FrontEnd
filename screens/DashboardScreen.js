@@ -6,9 +6,9 @@ import {
     Animated,
     Platform,
 } from "react-native";
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import { MAPS_API_KEY } from "@env";
-import BinLocation from "../assets/images/pin.png";
+// import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+// import { MAPS_API_KEY } from "@env";
+// import BinLocation from "../assets/images/pin.png";
 import React from "react";
 
 export default function DashboardScreen({ route }) {

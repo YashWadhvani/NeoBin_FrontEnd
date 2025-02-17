@@ -17,7 +17,7 @@ export default function DashboardScreen({ route }) {
     // Function to calculate the percentage for progress bars
     const getPercentage = (value, max) => {
         if (!value) return 0;
-        return Math.min((value / max) * 100, 100); // Ensure it doesn't exceed 100%
+        return Math.round(Math.min((value / max) * 100, 100)); // Ensure it doesn't exceed 100%
     };
     console.log(bin.location)
 
@@ -32,7 +32,7 @@ export default function DashboardScreen({ route }) {
                     <View style={styles.cardTextView}>
                         <Text style={styles.cardTitle}>Bin Fill</Text>
                         <Text style={styles.percentageText}>
-                            {bin.weight || 0}%
+                            {getPercentage(bin.weight, 100) || 0}%
                         </Text>
                     </View>
                     <View style={styles.progressBarBackground}>
@@ -49,7 +49,10 @@ export default function DashboardScreen({ route }) {
                     <View style={styles.cardTextView}>
                         <Text style={styles.cardTitle}>Distance</Text>
                         <Text style={styles.percentageText}>
-                            {bin.distance || 0}%
+                        {getPercentage(
+                                        bin.distance,
+                                        200
+                                    ) || 0}%
                         </Text>
                     </View>
                     <View style={styles.progressBarBackground}>
@@ -67,7 +70,7 @@ export default function DashboardScreen({ route }) {
                     </View>
                 </View>
 
-                <View style={styles.card}>
+                {/* <View style={styles.card}>
                     <View style={styles.cardTextView}>
                         <Text style={styles.cardTitle}>Gas Concentration</Text>
                         <Text style={styles.percentageText}>
@@ -87,13 +90,16 @@ export default function DashboardScreen({ route }) {
                             ]}
                         />
                     </View>
-                </View>
+                </View> */}
 
                 <View style={styles.card}>
                     <View style={styles.cardTextView}>
                         <Text style={styles.cardTitle}>Gas ADC Value</Text>
                         <Text style={styles.percentageText}>
-                            {bin.adc_value || 0}%
+                        {getPercentage(
+                                        bin.adc_value,
+                                        1024
+                                    ) || 0}%
                         </Text>
                     </View>
                     <View style={styles.progressBarBackground}>

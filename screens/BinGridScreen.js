@@ -34,7 +34,8 @@ export default function BinGridScreen({ navigation }) {
         return (
             <TouchableOpacity
                 style={styles.binContainer}
-                onPress={() => navigation.navigate("Dashboard", { bin: item })}
+                onPress={() => { console.log(item);
+                    navigation.navigate("Dashboard", { bin: item })}}
             >
                 <View style={styles.binIcon}>
                     <Image

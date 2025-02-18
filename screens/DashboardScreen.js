@@ -19,7 +19,17 @@ export default function DashboardScreen({ route }) {
         if (!value) return 0;
         return Math.round(Math.min((value / max) * 100, 100)); // Ensure it doesn't exceed 100%
     };
-    console.log(bin.location)
+
+    // Extract the last recorded values
+    const lastWeight = bin.weight?.[bin.weight.length - 1]?.value || 0;
+    const lastDistance = bin.distance?.[bin.distance.length - 1]?.value || 0;
+    const lastAdcValue = bin.adc_value?.[bin.adc_value.length - 1]?.value || 0;
+    let lastTimeStamp = bin.weight?.[bin.weight.length - 1]?.timestamp || "N/A";
+
+    lastTimeStamp = new Date(lastTimeStamp);
+    // Convert to IST by adding 5 hours and 30 minutes
+    const ISTOffset = 5.5 * 60; // 5 hours 30 minutes in minutes
+    lastTimeStamp.setMinutes(lastTimeStamp.getMinutes() - ISTOffset);
 
     return (
         <Animated.View style={styles.container}>
@@ -27,32 +37,30 @@ export default function DashboardScreen({ route }) {
             <Text style={styles.subHeadText}>Bin Details</Text>
 
             <ScrollView contentContainerStyle={styles.detailContainer}>
-                {/* Rectangle Cards with Progress Bars */}
+                {/* Bin Fill */}
                 <View style={styles.card}>
                     <View style={styles.cardTextView}>
                         <Text style={styles.cardTitle}>Bin Fill</Text>
                         <Text style={styles.percentageText}>
-                            {getPercentage(bin.weight, 100) || 0}%
+                            {getPercentage(lastWeight, 100)}%
                         </Text>
                     </View>
                     <View style={styles.progressBarBackground}>
                         <Animated.View
                             style={[
                                 styles.progressBarFill,
-                                { width: `${getPercentage(bin.weight, 100)}%` }, // Assuming max weight is 100
+                                { width: `${getPercentage(lastWeight, 100)}%` },
                             ]}
                         />
                     </View>
                 </View>
 
+                {/* Distance */}
                 <View style={styles.card}>
                     <View style={styles.cardTextView}>
                         <Text style={styles.cardTitle}>Distance</Text>
                         <Text style={styles.percentageText}>
-                        {getPercentage(
-                                        bin.distance,
-                                        200
-                                    ) || 0}%
+                            {getPercentage(lastDistance, 200)}%
                         </Text>
                     </View>
                     <View style={styles.progressBarBackground}>
@@ -61,45 +69,21 @@ export default function DashboardScreen({ route }) {
                                 styles.progressBarFill,
                                 {
                                     width: `${getPercentage(
-                                        bin.distance,
+                                        lastDistance,
                                         200
                                     )}%`,
-                                }, // Assuming max distance is 200
+                                },
                             ]}
                         />
                     </View>
                 </View>
 
-                {/* <View style={styles.card}>
-                    <View style={styles.cardTextView}>
-                        <Text style={styles.cardTitle}>Gas Concentration</Text>
-                        <Text style={styles.percentageText}>
-                            {bin.gas_concentration || 0}%
-                        </Text>
-                    </View>
-                    <View style={styles.progressBarBackground}>
-                        <Animated.View
-                            style={[
-                                styles.progressBarFill,
-                                {
-                                    width: `${getPercentage(
-                                        bin.gas_concentration,
-                                        100
-                                    )}%`,
-                                }, // Max concentration 100
-                            ]}
-                        />
-                    </View>
-                </View> */}
-
+                {/* Gas ADC Value */}
                 <View style={styles.card}>
                     <View style={styles.cardTextView}>
                         <Text style={styles.cardTitle}>Gas ADC Value</Text>
                         <Text style={styles.percentageText}>
-                        {getPercentage(
-                                        bin.adc_value,
-                                        1024
-                                    ) || 0}%
+                            {getPercentage(lastAdcValue, 1024)}%
                         </Text>
                     </View>
                     <View style={styles.progressBarBackground}>
@@ -108,10 +92,10 @@ export default function DashboardScreen({ route }) {
                                 styles.progressBarFill,
                                 {
                                     width: `${getPercentage(
-                                        bin.adc_value,
+                                        lastAdcValue,
                                         1024
                                     )}%`,
-                                }, // Max ADC value (e.g., 10-bit ADC)
+                                },
                             ]}
                         />
                     </View>
@@ -125,27 +109,25 @@ export default function DashboardScreen({ route }) {
                             ? `${bin.location.latitude}, ${bin.location.longitude}`
                             : "N/A"}
                     </Text>
-                   
-                        {/* <MapView
-                            style={styles.map}
-                            provider={PROVIDER_GOOGLE}
-                            initialRegion={{
-                                latitude: bin.location.latitude,
-                                longitude: bin.location.longitude,
-                                latitudeDelta: 0.1,
-                                longitudeDelta: 0.1,
-                            }}
-                        >
-                            <Marker
-                                coordinate={{
-                                    latitude: bin.location.latitude,
-                                    longitude: bin.location.longitude,
-                                }}
-                                pinColor="red"
-                            />
-                        </MapView>
-                        <Text>No location available</Text> */}
-                    
+                </View>
+
+                {/* Last Updated Time Display */}
+                <View style={styles.locationBox}>
+                    <Text style={styles.label}>Last Updated Time:</Text>
+                    <Text style={styles.value}>
+                        {lastTimeStamp
+                            ? lastTimeStamp.toLocaleString("en-GB", {
+                                  weekday: "short", // Day (Mon, Tue, etc.)
+                                  day: "2-digit", // Day (18)
+                                  month: "short", // Month (Feb)
+                                  year: "numeric", // Year (2025)
+                                  hour: "2-digit", // Hour (10)
+                                  minute: "2-digit", // Minute (00)
+                                  hour12: true, // AM/PM format
+                                  timeZone: "Asia/Kolkata", // Set the time zone to IST
+                              })
+                            : "N/A"}
+                    </Text>
                 </View>
             </ScrollView>
         </Animated.View>

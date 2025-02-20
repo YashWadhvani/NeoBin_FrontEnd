@@ -6,9 +6,9 @@ import {
     Animated,
     Platform,
 } from "react-native";
-// import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-// import { MAPS_API_KEY } from "@env";
-// import BinLocation from "../assets/images/pin.png";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import { MAPS_API_KEY } from "@env";
+import BinLocation from "../assets/images/pin.png";
 import React from "react";
 
 export default function DashboardScreen({ route }) {
@@ -109,6 +109,30 @@ export default function DashboardScreen({ route }) {
                             ? `${bin.location.latitude}, ${bin.location.longitude}`
                             : "N/A"}
                     </Text>
+
+                    {bin.location && (
+                        <View style={styles.mapContainer}>
+                            <MapView
+                                provider={PROVIDER_GOOGLE}
+                                style={styles.map}
+                                initialRegion={{
+                                    latitude: bin.location.latitude || 0,
+                                    longitude: bin.location.longitude || 0,
+                                    latitudeDelta: 0.01,
+                                    longitudeDelta: 0.01,
+                                }}
+                            >
+                                <Marker
+                                    coordinate={{
+                                        latitude: bin.location.latitude || 0,
+                                        longitude: bin.location.longitude || 0,
+                                    }}
+                                    title="Bin Location"
+                                    description="This is the bin's current location"
+                                />
+                            </MapView>
+                        </View>
+                    )}
                 </View>
 
                 {/* Last Updated Time Display */}

@@ -9,7 +9,20 @@ dist/
 web-build/
 expo-env.d.ts
 
-# Native
+# Native build artifacts
+android/.gradle/
+android/.idea/
+android/app/build/
+android/app/debug.keystore
+android/build/
+ios/Pods/
+ios/build/
+ios/*.xcodeproj/
+ios/*.xcworkspace/
+ios/*.pbxproj/
+ios/*.xcuserdatad/
+
+# Generated files
 *.orig.*
 *.jks
 *.p8
@@ -20,7 +33,7 @@ expo-env.d.ts
 # Metro
 .metro-health-check*
 
-# debug
+# Debugging
 npm-debug.*
 yarn-debug.*
 yarn-error.*
@@ -29,8 +42,9 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
+# Local env files
+.env*
 .env*.local
 
-# typescript
+# TypeScript
 *.tsbuildinfo

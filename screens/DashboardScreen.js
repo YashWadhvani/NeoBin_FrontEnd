@@ -122,14 +122,14 @@ export default function DashboardScreen({ route }) {
                                     longitudeDelta: 0.01,
                                 }}
                             >
-                                <Marker
+                                {/* <Marker
                                     coordinate={{
                                         latitude: bin.location.latitude || 0,
                                         longitude: bin.location.longitude || 0,
                                     }}
                                     title="Bin Location"
                                     description="This is the bin's current location"
-                                />
+                                /> */}
                             </MapView>
                         </View>
                     )}

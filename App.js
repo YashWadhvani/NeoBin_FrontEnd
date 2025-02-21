@@ -11,6 +11,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import * as Font from "expo-font";
 import TruckLoader from "./components/loader/TruckLoader";
 import BinGridScreen from "./screens/BinGridScreen";
+import ChartScreen from "./screens/ChartScreen";
 
 const Stack = createStackNavigator();
 
@@ -77,6 +78,10 @@ export default function App() {
                         <Stack.Screen
                             name="BinGrid"
                             component={BinGridScreen}
+                        />
+                        <Stack.Screen 
+                            name="Chart" 
+                            component={ChartScreen} 
                         />
                     </Stack.Navigator>
                 </NavigationContainer>

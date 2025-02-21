@@ -5,13 +5,14 @@ import {
     ScrollView,
     Animated,
     Platform,
+    Button
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { MAPS_API_KEY } from "@env";
 import BinLocation from "../assets/images/pin.png";
 import React from "react";
 
-export default function DashboardScreen({ route }) {
+export default function DashboardScreen({ route, navigation }) {
     const { bin } = route.params;
 
     // Function to calculate the percentage for progress bars
@@ -154,6 +155,8 @@ export default function DashboardScreen({ route }) {
                     </Text>
                 </View>
             </ScrollView>
+            
+            <Button title="View Charts" onPress={() => navigation.navigate("Chart")}/>
         </Animated.View>
     );
 }

@@ -1,70 +1,120 @@
-import React from "react";
-import { View } from "react-native";
-import Svg, { Path, Circle, G, Text } from "react-native-svg";
-import * as d3 from "d3-shape";
+import React, { useState, useEffect } from 'react';
+import { View, ScrollView, Text, StyleSheet } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
+import axios from 'axios';
+import { Picker } from '@react-native-picker/picker';
 
-const ChartScreen = () => {
-  // Data Points
-  const dataSets = [
-    { values: [{ y: 78.2 }, { y: 84.6 }, { y: 89.0 }], label: "Distance", color: "blue" },
-    { values: [{ y: 58.8 }, { y: 65.4 }, { y: 72.9 }], label: "Weight", color: "green" },
-    { values: [{ y: 560 }, { y: 650 }, { y: 680 }], label: "Gas Value", color: "red" },
-  ];
+const ChartScreen = ({ route }) => {
+  const { bin } = route.params;
+  const [timeFrame, setTimeFrame] = useState('hourly'); // Default timeframe
+  const [chartData, setChartData] = useState(null);
 
-  // Fallback if data is missing
-  const safeDataSets = dataSets?.length
-    ? dataSets
-    : [{ values: [{ y: 0 }], label: "No Data", color: "gray" }];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://neo-bin-back-end.vercel.app/api/v1/bin/${bin.binId}/${timeFrame}`
+        );
+        setChartData(response.data);
+      } catch (error) {
+        console.error(`Error fetching ${timeFrame} chart data:`, error);
+      }
+    };
 
-  // Chart Dimensions
-  const width = 300;
-  const height = 200;
-  const padding = 20;
+    fetchData();
+  }, [timeFrame, bin.binId]);
 
-  // Generate Line Paths
-  const linePaths = safeDataSets.map((dataset) => {
-    const lineGenerator = d3
-      .line()
-      .x((d, i) => padding + (i * (width - 2 * padding)) / (dataset.values.length - 1)) // X spacing
-      .y((d) => height - padding - d.y / 3) // Invert Y-axis scaling
-      .curve(d3.curveMonotoneX);
+  if (!chartData) {
+    return <View style={styles.loadingContainer}><Text>Loading...</Text></View>;
+  }
 
-    return { path: lineGenerator(dataset.values), color: dataset.color };
-  });
+  const transformData = (data) => {
+    const labels = data.distance.map((item) => item.hour);
+    const distanceData = data.distance.map((item) => item.average);
+    const weightData = data.weight.map((item) => item.average);
+    const gasData = data.gas_value.map((item) => item.average);
+
+    return {
+      labels: labels,
+      datasets: [
+        { data: distanceData, name: 'Distance' },
+        { data: weightData, name: 'Weight' },
+        { data: gasData, name: 'Gas Value' },
+      ],
+    };
+  };
+
+  const transformedData = transformData(chartData);
+  console.log(timeFrame)
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Svg width={width} height={height}>
-        {linePaths.map((dataset, index) => (
-          <Path key={index} d={dataset.path} stroke={dataset.color} strokeWidth={2} fill="none" />
-        ))}
+    <ScrollView style={styles.container}>
+      <Picker
+        selectedValue={timeFrame}
+        onValueChange={(itemValue) => setTimeFrame(itemValue)}
+        style={styles.picker}
+      >
+        <Picker.Item label="Hourly" value="hourly" />
+        <Picker.Item label="Daily" value="daily" />
+        <Picker.Item label="Monthly" value="monthly" />
+      </Picker>
 
-        {/* Points */}
-        {safeDataSets.map((dataset, index) =>
-          dataset.values.map((point, i) => (
-            <G key={`${index}-${i}`}>
-              <Circle
-                cx={padding + (i * (width - 2 * padding)) / (dataset.values.length - 1)}
-                cy={height - padding - point.y / 3}
-                r={4}
-                fill={dataset.color}
-              />
-              {/* Labels */}
-              <Text
-                x={padding + (i * (width - 2 * padding)) / (dataset.values.length - 1)}
-                y={height - padding - point.y / 3 - 10}
-                fontSize="10"
-                fill="black"
-                textAnchor="middle"
-              >
-                {point.y}
-              </Text>
-            </G>
-          ))
-        )}
-      </Svg>
-    </View>
+      {transformedData.datasets.map((dataset) => (
+        <View key={dataset.name} style={styles.chartContainer}>
+          <Text style={styles.chartTitle}>{dataset.name}</Text>
+          <LineChart
+            data={{
+              labels: transformedData.labels,
+              datasets: [{ data: dataset.data }],
+            }}
+            width={350}
+            height={220}
+            yAxisLabel=""
+            yAxisSuffix=""
+            yAxisInterval={1}
+            chartConfig={{
+              backgroundColor: '#e26a00',
+              backgroundGradientFrom: '#fb8c00',
+              backgroundGradientTo: '#ffa726',
+              decimalPlaces: 2,
+              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              style: { borderRadius: 16 },
+              propsForDots: { r: '6', strokeWidth: '2', stroke: '#ffa726' },
+            }}
+            bezier
+            style={{ marginVertical: 8, borderRadius: 16 }}
+          />
+        </View>
+      ))}
+    </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  picker: {
+    height: 50,
+    width: 200,
+    alignSelf: 'center',
+    marginBottom: 16,
+  },
+  chartContainer: {
+    marginBottom: 20,
+  },
+  chartTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  loadingContainer: {
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+});
 
 export default ChartScreen;

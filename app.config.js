@@ -1,7 +1,7 @@
 export default {
     expo: {
         name: "NeoBin",
-        slug: "NeoBin",
+        slug: "NeoBin_FrontEnd",
         version: "1.0.0",
         orientation: "portrait",
         icon: "./assets/Logo.png",

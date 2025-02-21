@@ -13,7 +13,8 @@ export default {
         "backgroundColor": "#FFF8EA"
       },
       "ios": {
-        "supportsTablet": true
+        "supportsTablet": true,
+        "bundleIdentifier": "com.yourcompany.yourapp"
       },
       "android": {
         "adaptiveIcon": {

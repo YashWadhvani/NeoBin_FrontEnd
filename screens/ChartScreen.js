@@ -1,50 +1,69 @@
 import React from "react";
-import { View, ScrollView } from "react-native";
-import { LineChart } from "react-native-chart-kit";
+import { View } from "react-native";
+import Svg, { Path, Circle, G, Text } from "react-native-svg";
+import * as d3 from "d3-shape";
 
 const ChartScreen = () => {
-  // Example Data
-  const data = {
-    distance: [{ hour: "18:00", average: 78.2 },{ hour: "20:00", average: 84.6 },{ hour: "22:00", average: 89.0 }],
-    weight: [{ hour: "18:00", average: 58.8 },{ hour: "20:00", average: 65.4 },{ hour: "22:00", average: 72.9 }],
-    gas_value: [{ hour: "18:00", average: 560 },{ hour: "20:00", average: 650 },{ hour: "22:00", average: 680 }],
-  };
+  // Data Points
+  const dataSets = [
+    { values: [{ y: 78.2 }, { y: 84.6 }, { y: 89.0 }], label: "Distance", color: "blue" },
+    { values: [{ y: 58.8 }, { y: 65.4 }, { y: 72.9 }], label: "Weight", color: "green" },
+    { values: [{ y: 560 }, { y: 650 }, { y: 680 }], label: "Gas Value", color: "red" },
+  ];
 
-  // Extracting labels (X-axis)
-  const labels = data.distance.map((item) => item.hour);
+  // Fallback if data is missing
+  const safeDataSets = dataSets?.length
+    ? dataSets
+    : [{ values: [{ y: 0 }], label: "No Data", color: "gray" }];
 
-  // Extracting dataset (Y-axis)
-  const distanceValues = data.distance.map((item) => item.average);
-  const weightValues = data.weight.map((item) => item.average);
-  const gasValues = data.gas_value.map((item) => item.average);
-  console.log(distanceValues)
-  console.log(weightValues)
-  console.log(gasValues)
+  // Chart Dimensions
+  const width = 300;
+  const height = 200;
+  const padding = 20;
+
+  // Generate Line Paths
+  const linePaths = safeDataSets.map((dataset) => {
+    const lineGenerator = d3
+      .line()
+      .x((d, i) => padding + (i * (width - 2 * padding)) / (dataset.values.length - 1)) // X spacing
+      .y((d) => height - padding - d.y / 3) // Invert Y-axis scaling
+      .curve(d3.curveMonotoneX);
+
+    return { path: lineGenerator(dataset.values), color: dataset.color };
+  });
 
   return (
-    <ScrollView horizontal>
-      <View>
-        <LineChart
-          data={{
-            labels: labels, // X-axis (hours)
-            datasets: [
-              { data: distanceValues, color: () => "blue", strokeWidth: 2 }, // Distance
-              { data: weightValues, color: () => "green", strokeWidth: 2 }, // Weight
-              { data: gasValues, color: () => "red", strokeWidth: 2 }, // Gas Value
-            ],
-          }}
-          width={400} // Width of the chart
-          height={250} // Height of the chart
-          chartConfig={{
-            backgroundGradientFrom: "#fff",
-            backgroundGradientTo: "#fff",
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            strokeWidth: 2, // Line thickness
-          }}
-          bezier
-        />
-      </View>
-    </ScrollView>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Svg width={width} height={height}>
+        {linePaths.map((dataset, index) => (
+          <Path key={index} d={dataset.path} stroke={dataset.color} strokeWidth={2} fill="none" />
+        ))}
+
+        {/* Points */}
+        {safeDataSets.map((dataset, index) =>
+          dataset.values.map((point, i) => (
+            <G key={`${index}-${i}`}>
+              <Circle
+                cx={padding + (i * (width - 2 * padding)) / (dataset.values.length - 1)}
+                cy={height - padding - point.y / 3}
+                r={4}
+                fill={dataset.color}
+              />
+              {/* Labels */}
+              <Text
+                x={padding + (i * (width - 2 * padding)) / (dataset.values.length - 1)}
+                y={height - padding - point.y / 3 - 10}
+                fontSize="10"
+                fill="black"
+                textAnchor="middle"
+              >
+                {point.y}
+              </Text>
+            </G>
+          ))
+        )}
+      </Svg>
+    </View>
   );
 };
 

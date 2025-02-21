@@ -55,7 +55,7 @@ export default function App() {
         <PaperProvider theme={customTheme}>
             <AuthProvider>
                 <NavigationContainer>
-                    <Stack.Navigator initialRouteName="Splash">
+                    <Stack.Navigator initialRouteName="Chart">
                         <Stack.Screen
                             name="Splash"
                             component={SplashScreen}

@@ -5,6 +5,7 @@ import {
     ScrollView,
     Animated,
     Button,
+    TouchableOpacity,
   } from "react-native";
   import React from "react";
   
@@ -122,10 +123,12 @@ import {
           </View>
         </ScrollView>
   
-        <Button
-          title="View Charts"
+        <TouchableOpacity
           onPress={() => navigation.navigate("Chart", { bin: bin })}
-        />
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>View Charts</Text>
+        </TouchableOpacity>
       </Animated.View>
     );
   }
@@ -215,4 +218,17 @@ import {
       color: "#FFF8EA",
       marginTop: 4,
     },
+    button: {
+      backgroundColor: "#FF6F61",
+      borderRadius: 8,
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      alignItems: "center",
+      marginTop: 20,
+  },
+  buttonText: {
+      color: "#FFF8EA",
+      fontSize: 16,
+      fontWeight: "bold",
+  },
   });

@@ -40,14 +40,14 @@ import {
             <View style={styles.cardTextView}>
               <Text style={styles.cardTitle}>Bin Fill</Text>
               <Text style={styles.percentageText}>
-                {getPercentage(lastWeight, 100)}%
+                {getPercentage(lastWeight, 10000)}%
               </Text>
             </View>
             <View style={styles.progressBarBackground}>
               <Animated.View
                 style={[
                   styles.progressBarFill,
-                  { width: `${getPercentage(lastWeight, 100)}%` },
+                  { width: `${getPercentage(lastWeight, 10000)}%` },
                 ]}
               />
             </View>
